@@ -262,7 +262,7 @@ class MandelbrotSetTask extends Task<Long> {
     }
 
     /**
-     * Calculates number of iterations a complex cubic polynomial
+     * Calculates number of iterations a custom complex polynomial
      * stays within a disk of some finite radius for a given complex number.
      * 
      * This number is used to choose a color for this pixel for precalculated 
@@ -275,7 +275,10 @@ class MandelbrotSetTask extends Task<Long> {
         int count = 0;
         Complex c = new Complex(0, 0);
         do {
-            c = c.times(c).times(c).plus(comp);
+            Complex z = c.copy();
+            Complex cubicPart = z.copy().times(z).times(z);
+            Complex linearPart = z.copy().scale(0.5);
+            c = cubicPart.minus(linearPart).plus(comp);
             count++;
         } while (count < CAL_MAX_COUNT && c.lengthSQ() < LENGTH_BOUNDARY);
         return count;
